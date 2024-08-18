@@ -19,7 +19,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::middleware(['auth','is_admin'])->group(function (){
         Route::get('/dashboard', [DashboardController::class])->name('dashboard');
-
     });
 });
 
