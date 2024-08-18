@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-    public function __invoke()
+    public function index()
     {
-        return Inertia::render('Admin');
+        return Inertia::render('Backend/Dashboard');
     }
 }

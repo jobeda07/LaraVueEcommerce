@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function login()
     {
-        return Inertia::render('Backend.auth.login');
+        return Inertia::render('Backend/Auth/Login');
     }
 
     public function checkLogin(Request $request)
