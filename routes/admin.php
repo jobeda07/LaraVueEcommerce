@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\Auth\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 
@@ -15,6 +16,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
       //  Route::get('/dashboard', [DashboardController::class])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        // product
+        Route::prefix('product')->name('product.')->group(function (){
+           Route::get('/', [ProductController::class, 'index'])->name('index');
+           Route::get('/create', [ProductController::class, 'create'])->name('create');
+           Route::get('/store', [ProductController::class, 'store'])->name('store');
+           Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
+           Route::get('/update/{id}', [ProductController::class, 'update'])->name('update');
+           Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
+
+        });
+          
 
     });
 });

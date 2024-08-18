@@ -89,10 +89,10 @@
             </button>
             <ul id="dropdown-pages" class="hidden py-2 space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  :href="route('admin.product.index')" 
                   class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >Products</a
+                  >Products</Link
                 >
               </li>
               <li>
@@ -566,10 +566,8 @@
       </div>
     </aside>
 </template>
-<script>
-export default {
-
-}
+<script setup>
+import { Link } from '@inertiajs/vue3';
 </script>
 <style lang="">
 
