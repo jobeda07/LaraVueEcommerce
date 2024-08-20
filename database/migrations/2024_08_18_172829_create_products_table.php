@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('name',200);
             $table->string('slug',400);
             $table->integer('quantity');
-            $table->integer('image')->nullable();
+            $table->string('thumbnail_image')->nullable();
+            $table->string('productImages')->nullable();
             $table->longText('description')->nullable();
             $table->boolean('published')->default(0);
             $table->boolean('inStock')->default(0);

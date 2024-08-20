@@ -23,13 +23,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('product')->name('product.')->group(function (){
            Route::get('/', [ProductController::class, 'index'])->name('index');
            Route::get('/create', [ProductController::class, 'create'])->name('create');
-           Route::get('/store', [ProductController::class, 'store'])->name('store');
+           Route::post('/store', [ProductController::class, 'store'])->name('store');
            Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('edit');
-           Route::get('/update/{id}', [ProductController::class, 'update'])->name('update');
+           Route::post('/update/{id}', [ProductController::class, 'update'])->name('update');
            Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('delete');
 
         });
-          
+
 
     });
 });
