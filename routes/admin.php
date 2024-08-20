@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Backend\Auth\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -14,6 +15,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['is_admin'])->group(function (){
       //  Route::get('/dashboard', [DashboardController::class])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('logout');
 
 
     });
