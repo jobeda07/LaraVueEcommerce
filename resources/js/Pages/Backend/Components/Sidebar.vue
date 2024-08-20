@@ -35,8 +35,8 @@
         </form>
         <ul class="space-y-2">
           <li>
-            <a
-              href="#"
+            <Link
+              :href="route('admin.dashboard')"
               class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <svg
@@ -49,8 +49,8 @@
                 <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                 <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
               </svg>
-              <span class="ml-3">Overview</span>
-            </a>
+              <span class="ml-3">Dashboard</span>
+            </Link>
           </li>
           <li>
             <button
@@ -89,29 +89,29 @@
             </button>
             <ul id="dropdown-pages" class="hidden py-2 space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  :href="route('admin.product.index')" 
                   class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >Settings</a
+                  >Products</Link
                 >
               </li>
               <li>
                 <a
                   href="#"
                   class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >Kanban</a
+                  >Category</a
                 >
               </li>
               <li>
                 <a
                   href="#"
                   class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >Calendar</a
+                  >Brand</a
                 >
               </li>
             </ul>
           </li>
-          <li>
+          <!-- <li>
             <button
               type="button"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
@@ -255,7 +255,7 @@
                 >
               </li>
             </ul>
-          </li>
+          </li> -->
         </ul>
         <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
           <li>
@@ -280,7 +280,7 @@
               <span class="ml-3">Docs</span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a
               href="#"
               class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
@@ -319,7 +319,7 @@
               </svg>
               <span class="ml-3">Help</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
       <div
@@ -566,10 +566,8 @@
       </div>
     </aside>
 </template>
-<script>
-export default {
-
-}
+<script setup>
+import { Link } from '@inertiajs/vue3';
 </script>
 <style lang="">
 
