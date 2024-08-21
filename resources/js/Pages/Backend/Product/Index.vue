@@ -324,13 +324,11 @@ const addProduct = async () => {
           title: page.props.flash.success,
           timer: 3000,
         });
-
         dialogVisible.value = false;
         resetForm();
       },
     });
   } catch (err) {
-    console.log(err);
     Swal.fire({
       icon: 'error',
       title: 'Error',
