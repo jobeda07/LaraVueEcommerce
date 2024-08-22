@@ -159,6 +159,8 @@
                             <th scope="col" class="px-4 py-3">Category</th>
                             <th scope="col" class="px-4 py-3">Brand</th>
                             <th scope="col" class="px-4 py-3">Price</th>
+                            <th scope="col" class="px-4 py-3">Stock</th>
+                            <th scope="col" class="px-4 py-3">Published</th>
                             <th scope="col" class="px-4 py-3">Create Date</th>
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">Actions</span>
@@ -172,6 +174,14 @@
                             <td class="px-4 py-3">{{product.category.name}}</td>
                             <td class="px-4 py-3">{{product.brand.name ?? 'N/A'}}</td>
                             <td class="px-4 py-3">{{product.price}}</td>
+                            <td class="px-4 py-3">
+                               <span v-if="product.inStock == 0" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">inStock</span>
+                               <span v-else class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">outOfStock</span>
+                            </td>
+                            <td class="px-4 py-3">
+                               <span v-if="product.published == 0" @click="changePublish(product.id)" class="cursor-pointer bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Published</span>
+                               <span v-else @click="changePublish(product.id)" class="cursor-pointer bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">UnPublished</span>
+                            </td>
                             <td class="px-4 py-3">{{product.created_at}}</td>
                             <!-- <td class="px-4 py-3 flex items-center justify-end">
                                 <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
@@ -385,5 +395,26 @@ const resetForm=()=>{
  category_id.value='';
  brand_id.value='';
 }
+
+const changePublish = async (id) => {
+    try {
+        await router.get(`product/changePublish/${id}`);
+         Swal.fire({
+            toast: true,
+            icon: 'success',
+            position: 'top-end',
+            showConfirmButton: false,
+            title:'Update Successfully',
+            timer: 1000,
+        });
+        // console.log('lazy busy lizu');
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err,
+        });
+    }
+};
 
 </script>
