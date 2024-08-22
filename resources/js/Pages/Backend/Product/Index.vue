@@ -42,6 +42,21 @@
     <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
     <textarea  v-model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
   </div>
+  <div>
+      <el-upload
+            v-model:file-list="fileList"
+            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove" :on-change="handleFileChange"
+          >
+            <el-icon><Plus /></el-icon>
+        </el-upload>
+
+  <el-dialog v-model="dialogVisible">
+    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+  </el-dialog>
+  </div>
   <!-- <div class="grid md:grid-cols-2 md:gap-6">
     <div class="relative z-0 w-full mb-5 group">
         <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
@@ -274,6 +289,13 @@ const dialogVisible = ref(false);
 const isEditModel = ref(false);
 
 //form data
+
+const productImagesadd = ref([]);
+
+const handleFileChange = (file) => {
+    productImages.value.push(file);
+}
+
 const id=ref('');
 const name=ref('');
 const price=ref('');
@@ -285,10 +307,10 @@ const published=ref('');
 const inStock=ref('');
 const category_id=ref('');
 const brand_id=ref('');
+const fileList =ref([]);
 
 
-const productImagesadd=ref([]);
-//end data
+//end 
 
 const openAddModel = () =>{
    isAddModel.value=true;
