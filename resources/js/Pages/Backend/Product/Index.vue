@@ -6,69 +6,67 @@
             v-model="dialogVisible"
             :title="isEditModel ? 'Edit Product':'Add Product'"
             width="500"
-            :before-close="handleClose"
         >
         <!--form start -->
 
+        <form @submit.prevent="addProduct()" class="max-w-md mx-auto" enctype="multipart/form-data">
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" v-model="name" name="name" id="floating_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="floating_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="text" v-model="price" name="price" id="floating_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="floating_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Price</label>
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            <input type="number" v-model="quantity" name="quantity" id="floating_floating_quantity" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="floating_floating_quantity" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Quantity</label>
+        </div>
+        <div class="">
+            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
+            <select v-model="category_id" id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected>Choose a Category</option>
+                <option v-for="category in categories.data" :key="category.id" :value="category.id">{{ category.name }}</option>
+            </select>
+        </div>
+        <div class="">
+            <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
+            <select v-model="brand_id" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected>Choose a Brand</option>
+                <option v-for="brand in brands.data" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
+            </select>
+        </div>
+        <div class="">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+            <textarea  v-model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+        </div>
+        <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image</label>
+            <div class="grid  md:gap-6">
+                <div class="relative z-0 w-full mb-6 group">
+                    <el-upload v-model:file-list="productImagesadd"
+                        list-type="picture-card" multiple
+                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                        :on-change="handleFileChange"
+                        :auto-upload="false">
+                        <el-icon>
+                            <Plus />
+                        </el-icon>
+                    </el-upload>
 
-<form class="max-w-md mx-auto" @submit.prevent="addProduct()">
-  <div class="relative z-0 w-full mb-5 group">
-      <input type="text" v-model="name" name="name" id="floating_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-      <label for="floating_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
-  </div>
-  <div class="relative z-0 w-full mb-5 group">
-      <input type="text" v-model="price" name="price" id="floating_price" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-      <label for="floating_price" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Price</label>
-  </div>
-  <div class="relative z-0 w-full mb-5 group">
-      <input type="number" v-model="quantity" name="quantity" id="floating_floating_quantity" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-      <label for="floating_floating_quantity" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Quantity</label>
-  </div>
-  <div class="">
-    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
-    <select v-model="category_id" id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option selected>Choose a Category</option>
-        <option v-for="category in categories.data" :key="category.id" :value="category.id">{{ category.name }}</option>
-    </select>
-  </div>
-  <div class="">
-    <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
-    <select v-model="brand_id" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option selected>Choose a Brand</option>
-        <option v-for="brand in brands.data" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
-    </select>
-  </div>
-  <div class="">
-    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-    <textarea  v-model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
-  </div>
-  <div>
-      <el-upload
-            v-model:file-list="fileList"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove" :on-change="handleFileChange"
-          >
-            <el-icon><Plus /></el-icon>
-        </el-upload>
-
-  <el-dialog v-model="dialogVisible">
-    <img w-full :src="dialogImageUrl" alt="Preview Image" />
-  </el-dialog>
-  </div>
-  <!-- <div class="grid md:grid-cols-2 md:gap-6">
-    <div class="relative z-0 w-full mb-5 group">
-        <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-        <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
-    </div>
-    <div class="relative z-0 w-full mb-5 group">
-        <input type="text" name="floating_company" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-        <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company (Ex. Google)</label>
-    </div>
-  </div> -->
-  <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-</form>
+                </div>
+            </div>
+        <!-- <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
+            </div>
+            <div class="relative z-0 w-full mb-5 group">
+                <input type="text" name="floating_company" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company (Ex. Google)</label>
+            </div>
+        </div> -->
+        <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+        </form>
 
     </el-dialog>
     <!-- dialog end -->
@@ -161,6 +159,8 @@
                             <th scope="col" class="px-4 py-3">Category</th>
                             <th scope="col" class="px-4 py-3">Brand</th>
                             <th scope="col" class="px-4 py-3">Price</th>
+                            <th scope="col" class="px-4 py-3">Stock</th>
+                            <th scope="col" class="px-4 py-3">Published</th>
                             <th scope="col" class="px-4 py-3">Create Date</th>
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">Actions</span>
@@ -174,6 +174,14 @@
                             <td class="px-4 py-3">{{product.category.name}}</td>
                             <td class="px-4 py-3">{{product.brand.name ?? 'N/A'}}</td>
                             <td class="px-4 py-3">{{product.price}}</td>
+                            <td class="px-4 py-3">
+                               <span v-if="product.inStock == 0" class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">inStock</span>
+                               <span v-else class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400">outOfStock</span>
+                            </td>
+                            <td class="px-4 py-3">
+                               <span v-if="product.published == 0" @click="changePublish(product.id)" class="cursor-pointer bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Published</span>
+                               <span v-else @click="changePublish(product.id)" class="cursor-pointer bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">UnPublished</span>
+                            </td>
                             <td class="px-4 py-3">{{product.created_at}}</td>
                             <!-- <td class="px-4 py-3 flex items-center justify-end">
                                 <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
@@ -269,32 +277,38 @@
 </template>
 
 <script setup>
-// import { Head } from '@inertiajs/vue3';
 import AdminLayout from "../Components/AdminLayout.vue";
-import { usePage } from '@inertiajs/vue3';
+import {router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { onMounted} from "vue";
-import {initFlowbite} from "flowbite";
-import { router } from '@inertiajs/vue3'
-onMounted(() => {
-    initFlowbite();
-});
+import { Plus } from '@element-plus/icons-vue';
+
 const products = usePage().props.products;
 const brands = usePage().props.brands;
 const categories = usePage().props.categories;
-
 
 const isAddModel=ref(false);
 const dialogVisible = ref(false);
 const isEditModel = ref(false);
 
-//form data
 
-const productImagesadd = ref([]);
+//upload multiple image
+const productImagesadd=ref([])
+const dialogImageUrl=ref('')
 
-const handleFileChange = (file) => {
-    productImages.value.push(file);
+const handleFileChange =(file)=>{
+    productImagesadd.value.push(file)
 }
+
+
+const handlePictureCardPreview = (file) => {
+  dialogImageUrl.value = file.url
+  dialogVisible.value = true
+}
+const handleRemove= (file) => {
+  console.log('handleRemove',file);
+}
+
+//form data
 
 const id=ref('');
 const name=ref('');
@@ -309,9 +323,17 @@ const category_id=ref('');
 const brand_id=ref('');
 const fileList =ref([]);
 
+//end data
 
-//end 
+//edit data
+const openEditModel = (product)=>{
+   console.log(product);
+   isEditModel.value=true;
+   dialogVisible.value=true;
+   isAddModel.value=false;
+}
 
+//add data
 const openAddModel = () =>{
    isAddModel.value=true;
    dialogVisible.value=true;
@@ -329,10 +351,10 @@ const addProduct = async () => {
   formData.append('inStock', inStock.value);
   formData.append('category_id', category_id.value);
   formData.append('brand_id', brand_id.value);
-  formData.append('thumbnail_image', thumbnail_image.value);
+  //formData.append('thumbnail_image', thumbnail_image.value);
 
   for (const image of productImagesadd.value) {
-    formData.append('productImagesadd[]', image.row);
+    formData.append('productImages[]', image.raw);
   }
 
   try {
@@ -346,27 +368,49 @@ const addProduct = async () => {
           title: page.props.flash.success,
           timer: 3000,
         });
-
         dialogVisible.value = false;
         resetForm();
       },
     });
   } catch (err) {
-    console.log(err);
     Swal.fire({
       icon: 'error',
       title: 'Error',
       text: 'Failed to add product. Please try again.',
     });
   }
+ id.value='';
+ price.value='';
+ quantity.value='';
+ thumbnail_image.value='';
+ productImagesadd.value=[];
+ dialogImageUrl.value='';
+ description.value='';
+ published.value='';
+ inStock.value='';
+ category_id.value='';
+ brand_id.value='';
+}
+
+const changePublish = async (id) => {
+    try {
+        await router.get(`product/changePublish/${id}`);
+         Swal.fire({
+            toast: true,
+            icon: 'success',
+            position: 'top-end',
+            showConfirmButton: false,
+            title:'Update Successfully',
+            timer: 1000,
+        });
+        // console.log('lazy busy lizu');
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err,
+        });
+    }
 };
 
-
-
-const openEditModel = (product)=>{
-   console.log(product);
-   isEditModel.value=true;
-   dialogVisible.value=true;
-   isAddModel.value=false;
-}
 </script>

@@ -18,6 +18,8 @@ class ProductResource extends JsonResource
             'id' =>$this->id,
             'name' =>$this->name,
             'price' =>$this->price,
+            'inStock' =>$this->inStock,
+            'published' =>$this->published,
             'category' => $this->category ? new CategoryResource($this->category) : 'N/A',
             'brand' => $this->brand ? new BrandResource($this->brand) : 'N/A',
             'created_at'=>$this->created_at->toFormattedDateString()
