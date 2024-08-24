@@ -25,14 +25,14 @@
         <div class="">
             <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
             <select v-model="category_id" id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected>Choose a Category</option>
+                <option >Choose a Category</option>
                 <option v-for="category in categories.data" :key="category.id" :value="category.id">{{ category.name }}</option>
             </select>
         </div>
         <div class="">
             <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Brand</label>
             <select v-model="brand_id" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected>Choose a Brand</option>
+                <option >Choose a Brand</option>
                 <option v-for="brand in brands.data" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
             </select>
         </div>
@@ -54,6 +54,10 @@
                     </el-upload>
 
                 </div>
+            </div>
+            <div class="relative">
+                <img class="w-10 h-10 rounded" src="/docs/images/people/profile-picture-5.jpg" alt="">
+                <span class="absolute top-0 left-8 transform -translate-y-1/2 w-3.5 h-3.5 bg-red-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
             </div>
         <!-- <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
@@ -204,13 +208,13 @@
                                 </div>
                             </td> -->
                                <td class="px-4 py-3 flex items-center justify-end">
-                                    <button :id="'dropdown-button-' + index" :data-dropdown-toggle="'dropdown-' + index" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                    <button :id="`${product.id}-button`" :data-dropdown-toggle="`${product.id}`" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
-                                    <div :id="'dropdown-' + index" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="'dropdown-button-' + index">
+                                    <div :id="`${product.id}`"  class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="`${product.id}`">
                                             <li>
                                                 <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                             </li>
@@ -328,9 +332,23 @@ const fileList =ref([]);
 //edit data
 const openEditModel = (product)=>{
    console.log(product);
+   category_id.value = '';
+   brand_id.value = '';
    isEditModel.value=true;
    dialogVisible.value=true;
    isAddModel.value=false;
+
+//edit data
+    id.value = product.id;
+    name.value = product.name;
+    price.value = product.price;
+    quantity.value = product.quantity;
+    productImagesadd.value = [];
+    dialogImageUrl.value = product.dialogImageUrl;
+    description.value = product.description;
+    category_id.value = product.category.id;
+    brand_id.value = product.brand.id;
+    productImages.value = product.productImages;
 }
 
 //add data
