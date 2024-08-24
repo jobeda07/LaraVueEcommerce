@@ -24,6 +24,7 @@ class ProductResource extends JsonResource
             'description' =>$this->description,
             'category' => $this->category ? new CategoryResource($this->category) : 'N/A',
             'brand' => $this->brand ? new BrandResource($this->brand) : 'N/A',
+            'productAllImages' =>$this->productAllImages ? ProductImageResource::collection($this->productAllImages) :[],
             'created_at'=>$this->created_at->toFormattedDateString()
         ];
     }

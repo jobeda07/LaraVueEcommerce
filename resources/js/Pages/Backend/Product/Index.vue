@@ -9,7 +9,7 @@
         >
         <!--form start -->
 
-        <form @submit.prevent="addProduct()" class="max-w-md mx-auto" enctype="multipart/form-data">
+        <form @submit.prevent="isEditModel ? updateProduct():addProduct()" class="max-w-md mx-auto" enctype="multipart/form-data">
         <div class="relative z-0 w-full mb-5 group">
             <input type="text" v-model="name" name="name" id="floating_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
             <label for="floating_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
@@ -52,13 +52,18 @@
                             <Plus />
                         </el-icon>
                     </el-upload>
-
                 </div>
             </div>
-            <div class="relative">
-                <img class="w-10 h-10 rounded" src="/docs/images/people/profile-picture-5.jpg" alt="">
-                <span class="absolute top-0 left-8 transform -translate-y-1/2 w-3.5 h-3.5 bg-red-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+            <!-- list of images -->
+            <div class="flex flex-nowrap mb-8 ">
+                <div v-for="(product_img,index) in productImages" :key="product_img.id" class="relative w-32 h-32">
+                    <img class="w-25 h-20 rounded" :src="product_img.image" alt="no-img">
+                    <span class="absolute top-0 right-8 transform -translate-y-1/2 w-3.5 h-3.5 bg-red-400 border-2 border-white dark:border-gray-800 rounded-full">
+                      <span @click="deleteImage(product_img,index)" class="text-white text-xs font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">x</span>
+                    </span>
+                </div>
             </div>
+            <!--end list of images -->
         <!-- <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
                 <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
@@ -213,17 +218,13 @@
                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
-                                    <div :id="`${product.id}`"  class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="`${product.id}`">
-                                            <li>
-                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                            </li>
-                                            <li>
-                                                <button @click="openEditModel(product)" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
-                                            </li>
+                                    <div :id="`${product.id}`" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="`${product.id}-button`">
+                                                <a href="#" @click="openEditModel(product)"
+                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                         </ul>
                                         <div class="py-1">
-                                            <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                            <a href="#" @click="deleteProduct(product,index)" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
                                         </div>
                                     </div>
                                 </td>
@@ -286,7 +287,9 @@ import {router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Plus } from '@element-plus/icons-vue';
 
-const products = usePage().props.products;
+defineProps({
+    products: Array
+})
 const brands = usePage().props.brands;
 const categories = usePage().props.categories;
 
@@ -338,17 +341,20 @@ const openEditModel = (product)=>{
    dialogVisible.value=true;
    isAddModel.value=false;
 
-//edit data
-    id.value = product.id;
-    name.value = product.name;
-    price.value = product.price;
-    quantity.value = product.quantity;
-    productImagesadd.value = [];
-    dialogImageUrl.value = product.dialogImageUrl;
-    description.value = product.description;
-    category_id.value = product.category.id;
-    brand_id.value = product.brand.id;
-    productImages.value = product.productImages;
+   //edit data
+    id.value=product.id;
+    name.value=product.name;
+    price.value=product.price;
+    quantity.value=product.quantity;
+   // thumbnail_image.value=product.;
+    productImagesadd.value=[];
+    productImages.value=product.productAllImages;
+    dialogImageUrl.value=product.dialogImageUrl;
+    description.value=product.description;
+    published.value=product.published;
+    inStock.value=product.inStock;
+    category_id.value=product.category.id;
+    brand_id.value=product.brand.id;
 }
 
 //add data
@@ -357,7 +363,7 @@ const openAddModel = () =>{
    dialogVisible.value=true;
    isEditModel.value=false;
 }
-
+//add product
 const addProduct = async () => {
   const formData = new FormData();
 
@@ -397,19 +403,22 @@ const addProduct = async () => {
       text: 'Failed to add product. Please try again.',
     });
   }
- id.value='';
- price.value='';
- quantity.value='';
- thumbnail_image.value='';
- productImagesadd.value=[];
- dialogImageUrl.value='';
- description.value='';
- published.value='';
- inStock.value='';
- category_id.value='';
- brand_id.value='';
 }
-
+//reset data
+const resetForm=()=>{
+    id.value='';
+    price.value='';
+    quantity.value='';
+    thumbnail_image.value='';
+    productImagesadd.value=[];
+    dialogImageUrl.value='';
+    description.value='';
+    published.value='';
+    inStock.value='';
+    category_id.value='';
+    brand_id.value='';
+}
+//chang publish status
 const changePublish = async (id) => {
     try {
         await router.get(`product/changePublish/${id}`);
@@ -431,4 +440,105 @@ const changePublish = async (id) => {
     }
 };
 
+//delete images
+const deleteImage =async (product_img,index)=>{
+    try{
+       await router.delete(`product/deleteImage/${product_img.id}`,{
+            onSuccess: page => {
+            productImages.value.splice(index,1);
+            Swal.fire({
+            toast: true,
+            icon: 'success',
+            position: 'top-end',
+            showConfirmButton: false,
+            title: page.props.flash.success,
+            timer: 3000,
+            });
+         },
+       })
+    }catch(err){
+        Swal.fire({
+            icon:'error',
+            title:'Error',
+            text:err,
+        })
+    }
+}
+//update product
+const updateProduct = async () => {
+  const formData = new FormData();
+
+  formData.append('name', name.value);
+  formData.append('price', price.value);
+  formData.append('quantity', quantity.value);
+  formData.append('description', description.value);
+  formData.append('published', published.value);
+  formData.append('inStock', inStock.value);
+  formData.append('category_id', category_id.value);
+  formData.append('brand_id', brand_id.value);
+  formData.append('_method','PUT');
+
+  for (const image of productImagesadd.value) {
+    formData.append('productImages[]', image.raw);
+  }
+
+  try {
+    await router.post(`product/update/${id.value}`, formData, {
+      onSuccess: page => {
+        Swal.fire({
+          toast: true,
+          icon: 'success',
+          position: 'top-end',
+          showConfirmButton: false,
+          title: page.props.flash.success,
+          timer: 3000,
+        });
+        dialogVisible.value = false;
+        resetForm();
+      },
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to add product. Please try again.',
+    });
+  }
+}
+//delete product
+const deleteProduct =async(product,index)=>{
+ Swal.fire({
+        title: 'Are you Sure',
+        text: "This actions cannot undo!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'no',
+        confirmButtonText: 'yes, delete!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            try {
+                router.delete(`product/delete/${product.id}`, {
+                    onSuccess: (page) => {
+                        this.delete(product, index);
+                        Swal.fire({
+                            toast: true,
+                            icon: "success",
+                            position: "top-end",
+                            showConfirmButton: false,
+                            title: page.props.flash.success
+                        });
+                    }
+                })
+            } catch (err) {
+                Swal.fire({
+                    icon:'error',
+                    title:'Error',
+                    text:err,
+                })
+            }
+        }
+    })
+}
 </script>
