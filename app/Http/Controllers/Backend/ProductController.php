@@ -83,6 +83,12 @@ class ProductController extends Controller
         return redirect()->route('admin.product.index')->with('success', 'Product created successfully.');
     }
 
+    public function deleteImage($id){
+        $image=ProductImage::find($id);
+        $this->deleteOne('uploads/productImages/', $image->image);
+        $image->delete();
+        return redirect()->route('admin.product.index')->with('success', 'Image Delete successfully.');
+    }
     public function changePublish($id){
         $product=Product::find($id);
         $product->published = $product->published == 1 ? 0 : 1;

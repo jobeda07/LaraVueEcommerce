@@ -20,8 +20,11 @@ class ProductResource extends JsonResource
             'price' =>$this->price,
             'inStock' =>$this->inStock,
             'published' =>$this->published,
+            'quantity' =>$this->quantity,
+            'description' =>$this->description,
             'category' => $this->category ? new CategoryResource($this->category) : 'N/A',
             'brand' => $this->brand ? new BrandResource($this->brand) : 'N/A',
+            'productAllImages' =>$this->productAllImages ? ProductImageResource::collection($this->productAllImages) :[],
             'created_at'=>$this->created_at->toFormattedDateString()
         ];
     }

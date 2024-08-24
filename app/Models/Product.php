@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
     protected $guarded=[];
-    protected $with=['category','brand'];
+    protected $with=['category','brand','productAllImages'];
 
     public function category(){
         return $this->belongsTo(Category::class, 'category_id');
@@ -17,6 +17,10 @@ class Product extends Model
 
     public function brand(){
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+    public function productAllImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
 
 

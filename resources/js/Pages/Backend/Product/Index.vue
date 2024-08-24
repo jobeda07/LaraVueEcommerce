@@ -52,9 +52,18 @@
                             <Plus />
                         </el-icon>
                     </el-upload>
-
                 </div>
             </div>
+            <!-- list of images -->
+            <div class="flex flex-nowrap mb-8 ">
+                <div v-for="(product_img,index) in productImages" :key="product_img.id" class="relative w-32 h-32">
+                    <img class="w-25 h-20 rounded" :src="product_img.image" alt="no-img">
+                    <span class="absolute top-0 right-8 transform -translate-y-1/2 w-3.5 h-3.5 bg-red-400 border-2 border-white dark:border-gray-800 rounded-full">
+                      <span @click="deleteImage(product_img,index)" class="text-white text-xs font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">x</span>
+                    </span>
+                </div>
+            </div>
+            <!--end list of images -->
         <!-- <div class="grid md:grid-cols-2 md:gap-6">
             <div class="relative z-0 w-full mb-5 group">
                 <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
@@ -204,18 +213,19 @@
                                 </div>
                             </td> -->
                                <td class="px-4 py-3 flex items-center justify-end">
-                                    <button :id="'dropdown-button-' + index" :data-dropdown-toggle="'dropdown-' + index" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                    <button :id="`${product.id}-button`" :data-dropdown-toggle="`${product.id}`" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
-                                    <div :id="'dropdown-' + index" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="'dropdown-button-' + index">
+                                    <div :id="`${product.id}`" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" :aria-labelledby="`${product.id}-button`">
                                             <li>
                                                 <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                             </li>
                                             <li>
-                                                <button @click="openEditModel(product)" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</button>
+                                                <a href="#" @click="openEditModel(product)"
+                                                    class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                             </li>
                                         </ul>
                                         <div class="py-1">
@@ -330,6 +340,22 @@ const openEditModel = (product)=>{
    isEditModel.value=true;
    dialogVisible.value=true;
    isAddModel.value=false;
+
+   //edit data
+    console.log('img',product.productAllImages);
+    id.value=product.id;
+    name.value=product.name;
+    price.value=product.price;
+    quantity.value=product.quantity;
+   // thumbnail_image.value=product.;
+    productImagesadd.value=[];
+    productImages.value=product.productAllImages;
+    dialogImageUrl.value=product.dialogImageUrl;
+    description.value=product.description;
+    published.value=product.published;
+    inStock.value=product.inStock;
+    category_id.value=product.category.id;
+    brand_id.value=product.brand.id;
 }
 
 //add data
@@ -416,5 +442,29 @@ const changePublish = async (id) => {
         });
     }
 };
+
+const deleteImage =async (product_img,index)=>{
+    try{
+       await router.delete(`product/deleteImage/${product_img.id}`,{
+            onSuccess: page => {
+            productImages.value.splice(index,1);
+            Swal.fire({
+            toast: true,
+            icon: 'success',
+            position: 'top-end',
+            showConfirmButton: false,
+            title: page.props.flash.success,
+            timer: 3000,
+            });
+         },
+       })
+    }catch(err){
+        Swal.fire({
+            icon:'error',
+            title:'Error',
+            text:err,
+        })
+    }
+}
 
 </script>
