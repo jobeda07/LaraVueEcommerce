@@ -82,6 +82,18 @@ class ProductController extends Controller
         }
         return redirect()->route('admin.product.index')->with('success', 'Product Update successfully.');
     }
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
+        $this->deleteOne('uploads/ProductThumbnail/', $product->image);
+        ProductImage::where('product_id', $product->id)
+            ->each(function ($image) {
+                $this->deleteOne('uploads/productImages/', $image->image);
+                $image->delete();
+            });
+        $product->delete();
+        return redirect()->route('admin.product.index')->with('success', 'Product deleted successfully.');
+    }
 
     public function deleteImage($id){
         $image=ProductImage::find($id);
