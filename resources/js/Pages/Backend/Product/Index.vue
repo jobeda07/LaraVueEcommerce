@@ -306,7 +306,6 @@ const productImagesadd=ref([])
 const dialogImageUrl=ref('')
 
 const handleFileChange =(file)=>{
-    console.log('handleFileChange',file);
     productImagesadd.value.push(file)
 }
 
@@ -320,6 +319,7 @@ const handleRemove= (file) => {
 }
 
 //form data
+
 const id=ref('');
 const name=ref('');
 const price=ref('');
@@ -331,6 +331,7 @@ const published=ref('');
 const inStock=ref('');
 const category_id=ref('');
 const brand_id=ref('');
+const fileList =ref([]);
 
 //end data
 
@@ -404,12 +405,7 @@ const addProduct = async () => {
       text: 'Failed to add product. Please try again.',
     });
   }
-};
-
-
-const resetForm=()=>{
  id.value='';
- name.value='';
  price.value='';
  quantity.value='';
  thumbnail_image.value='';
