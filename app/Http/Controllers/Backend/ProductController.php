@@ -53,9 +53,9 @@ class ProductController extends Controller
         }
         return redirect()->route('admin.product.index')->with('success', 'Product created successfully.');
     }
-    public function update(Request $request)
+    public function update(Request $request,$id)
     {
-        $product = new Product;
+        $product =Product::find($id);
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->price = $request->price;
@@ -63,12 +63,12 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
-        $product->save();
+        $product->update();
         if ($request->file('thumbnail_image')) {
             $this->deleteOne('uploads/ProductThumbnail/', $product->image);
             $filename = $this->imageUpload($request->image, 148, 177, 'uploads/ProductThumbnail/');
             $product->thumbnail_image ='uploads/ProductThumbnail/'.$filename;
-            $product->save();
+            $product->update();
         }
         if ($request->hasFile('productImages')) {
             $productImages = $request->file('productImages');
@@ -80,7 +80,7 @@ class ProductController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.product.index')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.product.index')->with('success', 'Product Update successfully.');
     }
 
     public function deleteImage($id){
