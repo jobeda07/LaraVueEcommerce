@@ -17,7 +17,7 @@ import {initFlowbite} from "flowbite";
 onMounted(() => {
     initFlowbite();
 });
-import ProductList from "./Frontend/Pages/ProductList.vue";
+import ProductList from "./Frontend/Components/ProductList.vue";
 import Hero from "./Frontend/Pages/Hero.vue";
 import Layout from "./Frontend/Layout.vue";
 
