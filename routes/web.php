@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
  // Cart
  Route::prefix('cart')->name('cart.')->group(function (){
-    Route::get('/index',[CartController::class,'index'])->name('index');
+    Route::get('/show',[CartController::class,'index'])->name('index');
     Route::post('/store/{product}',[CartController::class,'store'])->name('store');
     Route::patch('/update/{id}',[CartController::class,'update'])->name('update');
     Route::delete('/delete/{id}',[CartController::class,'delete'])->name('delete');

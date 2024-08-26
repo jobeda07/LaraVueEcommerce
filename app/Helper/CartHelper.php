@@ -51,8 +51,8 @@ Class CartHelper
         if(!empty($savedCartItems)){
             Cart::insert($savedCartItems);
         }
-    } 
-    
+    }
+
     public static function moveCartItemsIntoDb()
     {
         $request = request();
@@ -88,8 +88,9 @@ Class CartHelper
         $cartItems = self::getCartItems();
 
         $ids = Arr::pluck($cartItems, 'product_id');
-        $products = Product::whereIn('id', $ids)->with('productImageAll')->get();
+        $products = Product::whereIn('id', $ids)->with('productAllImages')->get();
         $cartItems = Arr::keyBy($cartItems, 'product_id');
         return [$products, $cartItems];
     }
+    //
 }

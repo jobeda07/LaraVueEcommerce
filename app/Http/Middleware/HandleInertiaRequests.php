@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
+use App\Helper\CartHelper;
 use Inertia\Middleware;
+use Illuminate\Http\Request;
+use App\Http\Resources\CartResource;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -39,7 +41,8 @@ class HandleInertiaRequests extends Middleware
                 'error'=>fn()=>$request->session()->get('error'),
                 'warning'=>fn()=>$request->session()->get('warning'),
                 'info'=>fn()=>$request->session()->get('info'),
-                ]
+            ],
+            'cart'=>new CartResource(CartHelper::getProductsAndCartItems()),
         ];
     }
 }

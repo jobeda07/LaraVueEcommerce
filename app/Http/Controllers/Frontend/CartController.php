@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Cart;
+use Inertia\Inertia;
 use App\Models\Product;
 use App\Helper\CartHelper;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use App\Http\Controllers\Controller;
 class CartController extends Controller
 {
     public function index(){
-
+       return Inertia::render('Frontend/Cart/Cart');
     }
     public function store(Request $request , $id){
        // dd($request);
@@ -51,7 +52,7 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'cart added successfully');
     }
-    
+
      public function update(Request $request, Product $product)
     {
         $quantity = $request->integer('quantity');

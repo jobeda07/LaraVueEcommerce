@@ -390,7 +390,7 @@ const addProduct = async () => {
           position: 'top-end',
           showConfirmButton: false,
           title: page.props.flash.success,
-          timer: 3000,
+          timer: 1000,
         });
         dialogVisible.value = false;
         resetForm();
@@ -401,6 +401,7 @@ const addProduct = async () => {
       icon: 'error',
       title: 'Error',
       text: 'Failed to add product. Please try again.',
+      timer: 1000,
     });
   }
 }
@@ -436,6 +437,7 @@ const changePublish = async (id) => {
             icon: 'error',
             title: 'Error',
             text: err,
+            timer: 1000,
         });
     }
 };
@@ -452,7 +454,7 @@ const deleteImage =async (product_img,index)=>{
             position: 'top-end',
             showConfirmButton: false,
             title: page.props.flash.success,
-            timer: 3000,
+            timer: 1000,
             });
          },
        })
@@ -461,6 +463,7 @@ const deleteImage =async (product_img,index)=>{
             icon:'error',
             title:'Error',
             text:err,
+            timer: 1000,
         })
     }
 }
@@ -491,7 +494,7 @@ const updateProduct = async () => {
           position: 'top-end',
           showConfirmButton: false,
           title: page.props.flash.success,
-          timer: 3000,
+          timer: 1000,
         });
         dialogVisible.value = false;
         resetForm();
@@ -502,6 +505,7 @@ const updateProduct = async () => {
       icon: 'error',
       title: 'Error',
       text: 'Failed to add product. Please try again.',
+      timer: 1000,
     });
   }
 }
@@ -527,7 +531,8 @@ const deleteProduct =async(product,index)=>{
                             icon: "success",
                             position: "top-end",
                             showConfirmButton: false,
-                            title: page.props.flash.success
+                            title: page.props.flash.success,
+                            timer: 1000,
                         });
                     }
                 })
@@ -536,6 +541,7 @@ const deleteProduct =async(product,index)=>{
                     icon:'error',
                     title:'Error',
                     text:err,
+                    timer: 1000,
                 })
             }
         }

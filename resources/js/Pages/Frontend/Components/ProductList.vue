@@ -63,21 +63,25 @@ import { router } from '@inertiajs/vue3';
 defineProps({
     products: Array
 })
-const addToCart = async (id) => {
-    await router.post(`cart/store/${id}`, {
-        onSuccess: (page) => {
-            if (page.props.flash.success) {
-                Swal.fire({
-                    toast: true,
-                    icon: "success",
-                    position: "top-end",
-                    showConfirmButton: false,
-                    title: page.props.flash.success
-                });
-            }
-             
-        },
-    })
+const addToCart = (id) => {
+    try{
+        router.post(`cart/store/${id}`);
+        Swal.fire({
+            toast: true,
+            icon: "success",
+            position: "top-end",
+            showConfirmButton: false,
+            title: 'Add To Cart SuccessFully',
+            timer: 1000,
+        });
+    }catch(err){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something Went Wrong.',
+            timer: 1000,
+        });
+    }
 };
 </script>
 <style lang="">
