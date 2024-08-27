@@ -11,8 +11,37 @@ use App\Http\Controllers\Controller;
 
 class CartController extends Controller
 {
-    public function index(){
-       return Inertia::render('Frontend/Cart/Cart');
+    // public function index(){
+    //    return Inertia::render('Frontend/Cart/Cart');
+    // }
+    public function index(Request $request, Product $product)
+    {
+        $user = $request->user();
+        if ($user) {
+            $cartItems = Cart::where('user_id', $user->id)->get();
+           // $userAddress = UserAddress::where('user_id', $user->id)->where('isMain', 1)->first();
+            if ($cartItems->count() > 0) {
+                return Inertia::render(
+                    'Frontend/Cart/Cart',
+                    [
+                        'cartItems' => $cartItems,
+                       // 'userAddress' => $userAddress
+                    ]
+                );
+            }else {
+                return redirect()->back();
+            }  
+        }
+        else {
+            $cartItems = CartHelper::getCookieCartItems();
+            //dd($cartItems);
+            if (count($cartItems) > 0) {
+                $cartItems = new CartResource(CartHelper::getProductsAndCartItems());
+                return  Inertia::render('Frontend/Cart/Cart', ['cartItems' => $cartItems]);
+            } else {
+                return redirect()->back();
+            }
+        }
     }
     public function store(Request $request , $id){
        // dd($request);
