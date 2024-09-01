@@ -45,7 +45,7 @@ class CartController extends Controller
         }
     }
     public function store(Request $request , $id){
-       // dd($request);
+      // dd($request);
        $quantity=$request->post('quantity',1);
        $user=$request->user();
        if($user){
