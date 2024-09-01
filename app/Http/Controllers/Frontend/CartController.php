@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Helper\CartHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CartResource;
 
 class CartController extends Controller
 {
@@ -30,7 +31,7 @@ class CartController extends Controller
                 );
             }else {
                 return redirect()->back();
-            }  
+            }
         }
         else {
             $cartItems = CartHelper::getCookieCartItems();
