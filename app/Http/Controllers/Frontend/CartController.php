@@ -15,11 +15,12 @@ class CartController extends Controller
     // public function index(){
     //    return Inertia::render('Frontend/Cart/Cart');
     // }
-    public function index(Request $request, Product $product)
+    public function index(Request $request)
     {
         $user = $request->user();
         if ($user) {
             $cartItems = Cart::where('user_id', $user->id)->get();
+            //dd($cartItems);
            // $userAddress = UserAddress::where('user_id', $user->id)->where('isMain', 1)->first();
             if ($cartItems->count() > 0) {
                 return Inertia::render(
@@ -83,16 +84,18 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'cart added successfully');
     }
 
-     public function update(Request $request, Product $product)
+     public function update(Request $request)
     {
         $quantity = $request->integer('quantity');
+        $product_id = $request->product['id'];
         $user = $request->user();
         if ($user) {
-            Cart::where(['user_id' => $user->id, 'product_id' => $product->id])->update(['quantity' => $quantity]);
+            Cart::where(['user_id' => $user->id, 'product_id' => $product_id])->update(['quantity' => $quantity]);
+
         } else {
             $cartItems = CartHelper::getCookieCartItems();
             foreach ($cartItems as &$item) {
-                if ($item['product_id'] === $product->id) {
+                if ($item['product_id'] === $product_id) {
                     $item['quantity'] = $quantity;
                     break;
                 }
@@ -102,11 +105,11 @@ class CartController extends Controller
 
         return redirect()->back();
     }
-    public function delete(Request $request, Product $product)
+    public function delete(Request $request,$id)
     {
         $user = $request->user();
         if ($user) {
-            Cart::query()->where(['user_id' => $user->id, 'product_id' => $product->id])->first()?->delete();
+            Cart::query()->where(['user_id' => $user->id, 'product_id' => $id])->first()?->delete();
             if (Cart::count() <= 0) {
                 return redirect()->route('home')->with('info', 'your cart is empty');
             } else {
@@ -115,7 +118,7 @@ class CartController extends Controller
         } else {
             $cartItems = CartHelper::getCookieCartItems();
             foreach ($cartItems as $i => &$item) {
-                if ($item['product_id'] === $product->id) {
+                if ($item['product_id'] === $id) {
                     array_splice($cartItems, $i, 1);
                     break;
                 }

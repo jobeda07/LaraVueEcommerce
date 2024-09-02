@@ -11,7 +11,7 @@
         <!-- cart product start -->
           <div v-for="product in products" :key="product.id"  class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
             <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-              <a href="#" class="shrink-0 md:order-1">
+              <a  class="shrink-0 md:order-1">
                 <img class="h-20 w-20 dark:hidden" v-if="product.productAllImages && product.productAllImages.length > 0"
                                 :src="product.productAllImages[0].image"
                                 :alt="product.imageAlt" />
@@ -21,15 +21,18 @@
               </a>
               <label for="counter-input" class="sr-only">Choose quantity:</label>
               <div class="flex items-center justify-between md:order-3 md:justify-end">
+              <!-- quantity cart -->
                 <div class="flex items-center">
-                  <button type="button" id="decrement-button" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                  <button @click.prevent="updatecart(product,carts[getCartItem(product.id)].quantity - 1)"
+                   :disabled="carts[getCartItem(product.id)].quantity <=1"
+                   :class="[carts[getCartItem(product.id)].quantity >1 ? 'bg-white-100 cursor-pointer' :'bg-gray-100 cursor-not-allowed', 'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 hover:bg-white-200 focus:outline-none focus:ring-2 focus:ring-white-100 dark:border-gray-600 dark:bg-white-700 dark:hover:bg-white-600 dark:focus:ring-white-700']">
                     <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
                     </svg>
                   </button>
-                    <input type="text" id="counter-input" min="1" class="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white" v-if="getCartItem(product.id)"
-                    v-model="getCartItem(product.id).quantity"  />
-                  <button type="button" id="increment-button"  class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700">
+                    <input type="text" readonly min="1" class="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
+                    v-model="carts[getCartItem(product.id)].quantity" />
+                  <button @click.prevent="updatecart(product,carts[getCartItem(product.id)].quantity + 1)"    class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-white-100 hover:bg-white-200 focus:outline-none focus:ring-2 focus:ring-white-100 dark:border-gray-600 dark:bg-white-700 dark:hover:bg-white-600 dark:focus:ring-white-700">
                     <svg class="h-2.5 w-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
                     </svg>
@@ -50,7 +53,7 @@
                     Add to Favorites
                   </button>
 
-                  <button type="button" class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
+                  <button @click="remove(product.id)" type="button" class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
                     <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
                     </svg>
@@ -61,8 +64,8 @@
             </div>
           </div>
         <!-- cart product end -->
-        </div> 
-      </div> 
+        </div>
+      </div>
 
       <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
         <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
@@ -125,7 +128,7 @@
 <script setup>
 import { computed, onMounted} from "vue";
 import {initFlowbite} from "flowbite";
-import {usePage} from "@inertiajs/vue3";
+import {usePage ,router} from "@inertiajs/vue3";
 onMounted(() => {
     initFlowbite();
 });
@@ -139,7 +142,51 @@ const carts = computed(() => usePage().props.cart.data.items);
 const products = computed(() => usePage().props.cart.data.products);
 const total = computed(() => usePage().props.cart.data.total);
 
-const getCartItem = (productId) => carts.value.find(item => item.product_id === productId);
+const getCartItem = (productId) => carts.value.findIndex((item)=> item.product_id === productId);
+const updatecart= (productId,quantity)=>{
+    try{
+        router.patch(route('cart.update',productId),{
+            quantity:quantity,
+            product:productId,
+        });
+        Swal.fire({
+            toast: true,
+            icon: "success",
+            position: "top-end",
+            showConfirmButton: false,
+            title: ' Cart Update SuccessFully',
+            timer: 1000,
+        });
+    }catch(err){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something Went Wrong.',
+            timer: 1000,
+        })
+    }
+}
+const remove=(product)=>{
+    try{
+        router.delete(route('cart.delete',product));
+        Swal.fire({
+            toast: true,
+            icon: "success",
+            position: "top-end",
+            showConfirmButton: false,
+            title: ' Cart Item Delete SuccessFully',
+            timer: 1000,
+        });
+
+    }catch(err){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Something Went Wrong.',
+            timer: 1000,
+        })
+    }
+}
 
 </script>
 
